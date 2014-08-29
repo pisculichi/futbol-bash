@@ -35,6 +35,7 @@ Ejemplo:
 ####xpath
 
 Debian/Ubuntu
-# aptitude install libxml-xpath-perl
+
+$sudo aptitude install libxml-xpath-perl
 
 
