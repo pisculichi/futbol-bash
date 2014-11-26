@@ -10,29 +10,28 @@ else
   fecha=$2
 fi
 case "$1" in
-  [Aa][r][g][e][n][t][i][n][a] ) url="http://estadisticas.tycsports.com/proceso/incoming/html/primeraa/fixture.html"
+  [Aa][r][g][e][n][t][i][n][a] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/primeraa/pages/es/fixture.html"
     partidosFecha=10
     ;;
-  [Ee][s][p][a][ñ][a] )    url="http://estadisticas.tycsports.com/proceso/incoming/html/espana/fixture.html"
+  [Ee][s][p][a][ñ][a] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/espana/pages/es/fixture.html"
     partidosFecha=10
     ;;
-  [Pp][r][e][m][i][e][r] )    url="http://estadisticas.tycsports.com/proceso/incoming/html/premierleague/fixture.html"
+  [Pp][r][e][m][i][e][r] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/premierleague/pages/es/fixture.html"
     partidosFecha=10
     ;;
-  [Cc][a][l][c][i][o] )    url="http://estadisticas.tycsports.com/proceso/incoming/html/italia/fixture.html"
+  [Cc][a][l][c][i][o] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/italia/pages/es/fixture.html"
     partidosFecha=10
     ;;
-  [Bb][u][n][d][e][s][l][i][g][a] )    url="http://estadisticas.tycsports.com/proceso/incoming/html/alemania/fixture.html"
+  [Bb][u][n][d][e][s][l][i][g][a] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/alemania/pages/es/fixture.html"
     partidosFecha=9
     ;;
-  [Uu][r][u][g][u][a][y] )    url="http://estadisticas.tycsports.com/proceso/incoming/html/uruguay/fixture.html"
+  [Uu][r][u][g][u][a][y] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/uruguay/pages/es/fixture.html"
     partidosFecha=8
     ;;
-  * )	url="http://estadisticas.tycsports.com/proceso/incoming/html/primeraa/fixture.html"
+  * )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/primeraa/pages/es/fixture.html"
     partidosFecha=10
     ;;
 esac
-
 
 
 rm /tmp/fixture.tmp* /tmp/fixture.html 2> /dev/null
@@ -40,26 +39,25 @@ wget -O /tmp/fixture.tmp -c -nv $url 2> /dev/null
 
 iconv -t utf8 /tmp/fixture.tmp -o /tmp/fixture.tmp.utf8
 
-sed -n '/<div id="datos_/,/<\/div>/p' /tmp/fixture.tmp.utf8 | tr "&" " " > /tmp/fixture.tmp2
-sed '1c<div>\n<div>\n<table>' /tmp/fixture.tmp2 | sed '/<td class="gol vis"><span> nbsp;/c<td class="gol vis"><span>-</span></td>'  | sed '/<td class="gol loc"><span> nbsp;/c<td class="gol loc"><span>-</span></td>' | sed '/<td class="escudo">/d' | sed '/<td xmlns=/d' | sed '/<div id="datos/c<div>\n<table>' > /tmp/fixture.html
-echo "</div>" >> /tmp/fixture.html
+sed -n '/<div class="fase n1 col-md-12  show">/,/<div class="footerCtn">/p' /tmp/fixture.tmp.utf8 | tr "&" " " > /tmp/fixture.tmp2
+sed '1c<div>\n<div>\n' /tmp/fixture.tmp2 | sed '/<img src/d' | sed 's/ nbsp;/-/g' | sed 's/<\/ul><\/div><\/nav>//g' | sed '/<div class="footerCtn">/d' > /tmp/fixture.html
 
-local=( `xpath -q -e '//td[@class="equipo"]//span[@class="local"]/text()' /tmp/fixture.html | tr " " "_"` )
+local=( `xpath -q -e '//div[@class="col-md-5 col-sm-5 col-xs-10 local"]//div[@class="equipo col-xs-4"]/text()' /tmp/fixture.html | tr " " "_"` )
 
-gol_local=( `xpath -q -e '//td[@class="gol loc"]//span/text()' /tmp/fixture.html | tr " " "_"` )
+gol_local=( `xpath -q -e '//div[@class="col-md-5 col-sm-5 col-xs-10 local"]//div[@class="resultado col-xs-3"]/text()' /tmp/fixture.html | tr " " "_"` )
 
-gol_visita=( `xpath -q -e '//td[@class="gol vis"]//span/text()' /tmp/fixture.html | tr " " "_"` )
+gol_visita=( `xpath -q -e '//div[@class="col-md-5  col-sm-5 col-xs-10 visitante"]//div[@class="resultado col-xs-3"]/text()' /tmp/fixture.html | tr " " "_"` )
 
-visita=( `xpath -q -e '//td[@class="equipo"]//span[@class="visitante"]/text()' /tmp/fixture.html | tr " " "_"` )
+visita=( `xpath -q -e '//div[@class="col-md-5  col-sm-5 col-xs-10 visitante"]//div[@class="equipo col-xs-4"]/text()' /tmp/fixture.html | tr " " "_"` )
 
-dias=( `xpath -q -e '//td[@class="dia"]/text()' /tmp/fixture.html | tr " " "_"` )
+dias=( `xpath -q -e '//div[@class="dia col-md-3 col-sm-3 col-xs-4 mc-date"]//text()' /tmp/fixture.html | tr " " "_"` )
 
-horas=( `xpath -q -e '//td[@class="hora"]/text()' /tmp/fixture.html | tr " " "_"` )
+horas=( `xpath -q -e '//div[@class="hora col-md-3 col-sm-3 col-xs-4 mc-time"]//text()' /tmp/fixture.html | tr " " "_"` )
 
-header="|  %-20s | %-2s | %-2s | %-3s| %-20s | %-12s | %-20s |\n"
-content="|  %-20s | %-2s | %-2s | %-2s | %-20s | %-11s | %-20s |\n"
+header="|  %-20s | %-2s | %-2s | %-3s| %-20s | %-12s | %-12s |\n"
+content="|  %-20s | %-2s | %-2s | %-2s | %-20s | %-11s | %-12s |\n"
 
-printf "%40s\n\n" "Resultados Fecha N° $fecha"
+printf "\n%40s\n\n" "Resultados Fecha N° $fecha"
 
 printf "$header" "Local" " " "vs" " " "Visitante" "Día" "Hora"
 
