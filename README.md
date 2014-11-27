@@ -29,6 +29,12 @@ Ejemplo:
 + Inglaterra as Premier
 + España
 + Alemania as Bundesliga
++ Chile
++ Ecuador
++ Paraguay
++ Bolivia
++ Peru
++ Venezuela
 
 
 
