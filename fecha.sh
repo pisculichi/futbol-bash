@@ -28,6 +28,24 @@ case "$1" in
   [Uu][r][u][g][u][a][y] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/uruguay/pages/es/fixture.html"
     partidosFecha=8
     ;;
+  [Cc][h][i][l][e] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/chile/pages/es/fixture.html"
+    partidosFecha=9
+    ;;
+  [Ee][c][u][a][d][o][r] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/ecuador/pages/es/fixture.html"
+    partidosFecha=6
+    ;;
+  [Pp][a][r][a][g][u][a][y] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/paraguay/pages/es/fixture.html"
+    partidosFecha=6
+    ;;
+  [Bb][o][l][i][v][i][a] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/bolivia/pages/es/fixture.html"
+    partidosFecha=6
+    ;;
+  [Pp][e][r][u] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/peru/pages/es/fixture.html"
+    partidosFecha=8
+    ;;
+  [Vv][e][n][e][z][u][e][l][a] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/venezuela/pages/es/fixture.html"
+    partidosFecha=9
+    ;;
   * )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/primeraa/pages/es/fixture.html"
     partidosFecha=10
     ;;
@@ -54,8 +72,8 @@ dias=( `xpath -q -e '//div[@class="dia col-md-3 col-sm-3 col-xs-4 mc-date"]//tex
 
 horas=( `xpath -q -e '//div[@class="hora col-md-3 col-sm-3 col-xs-4 mc-time"]//text()' /tmp/fixture.html | tr " " "_"` )
 
-header="|  %-20s | %-2s | %-2s | %-3s| %-20s | %-12s | %-12s |\n"
-content="|  %-20s | %-2s | %-2s | %-2s | %-20s | %-11s | %-12s |\n"
+header="|  %-25s | %-2s | %-2s | %-3s| %-25s | %-12s | %-10s |\n"
+content="|  %-25s | %-2s | %-2s | %-2s | %-25s | %-11s | %-10s |\n"
 
 printf "\n%40s\n\n" "Resultados Fecha N° $fecha"
 

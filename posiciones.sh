@@ -14,6 +14,18 @@ case "$1" in
     ;;
   [Aa][r][g][e][n][t][i][n][a] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/primeraa/pages/es/posiciones.html"
     ;;
+  [Cc][h][i][l][e] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/chile/pages/es/posiciones.html"
+    ;;
+  [Ee][c][u][a][d][o][r] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/ecuador/pages/es/posiciones.html"
+    ;;
+  [Pp][a][r][a][g][u][a][y] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/paraguay/pages/es/posiciones.html"
+    ;;
+  [Bb][o][l][i][v][i][a] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/bolivia/pages/es/posiciones.html"
+    ;;
+  [Pp][e][r][u] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/peru/pages/es/posiciones.html"
+    ;;
+  [Vv][e][n][e][z][u][e][l][a] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/venezuela/pages/es/posiciones.html"
+    ;;
   * )  url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/primeraa/pages/es/posiciones.html"
 esac
 
@@ -24,12 +36,12 @@ wget -O /tmp/posiciones.tmp -c -nv $url 2> /dev/null
 iconv -t utf8 /tmp/posiciones.tmp -o /tmp/posiciones.tmp.utf8
 
 sed -n '/<table class="tabla_fase table table-condensed" id="pos_n1">/,/<\/table>/p' /tmp/posiciones.tmp.utf8 | tr "&" " " > /tmp/posiciones.html2
-sed  '/<img src=/d' /tmp/posiciones.html2 | sed 's/<\/div>//g' | sed 's/<div class="border">//g' | sed 's/<span class="badge">//g' | sed 's/<\/span>//g' |sed '/<span class="p_europa/d' | sed '/<span class="p_desciende/d' > /tmp/posiciones.html
+sed  '/<img src=/d' /tmp/posiciones.html2 | sed 's/nbsp;//g' | sed 's/<\/div>//g' | sed 's/<div class="border">//g' | sed 's/<span class="badge">//g' | sed 's/<\/span>//g' | sed '/<tr><td colspan="20"><span class="leyenda">/d' | sed '/<span class="p_europa/d' | sed '/<span class="p_desciende/d' > /tmp/posiciones.html
 
 equipos=( `xpath -q -e '/table/tr//td/text()' /tmp/posiciones.html | tr " " "_"` )
 
-header="|%4s | %20s | %3s| %3s| %3s| %3s| %3s| %3s| %3s|\n"
-content="|%4s | %20s | %-2s | %-2s | %-2s | %-2s | %-2s | %-2s | %-2s | \n"
+header="|%4s | %30s | %3s| %3s| %3s| %3s| %3s| %3s| %3s|\n"
+content="|%4s | %30s | %-2s | %-2s | %-2s | %-2s | %-2s | %-2s | %-2s | \n"
 
 printf "\n%40s\n\n" "POSICIONES"
 printf "$header" "POS" "EQUIPO" "PTS" "PJ" "PG" "PE" "PP" "GF" "GC"
