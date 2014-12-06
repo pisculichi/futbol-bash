@@ -1,4 +1,4 @@
-#Scripts de futbol
+#Scripts de fútbol
 
 ####fecha.sh (requiere tener instalado xpath)
 
@@ -40,8 +40,10 @@ Ejemplo:
 
 ####xpath
 
-Debian/Ubuntu
+* Debian/Ubuntu (y derivados): `sudo aptitude install libxml-xpath-perl`
+* Fedora: `yum install perl-XML-XPath`
+* Gentoo¹: `emerge dev-perl/XML-XPath`
+* Arch/Manjaro: `pacman -S perl-xml-xpath`
 
-$sudo aptitude install libxml-xpath-perl
-
-
+1. Para que los scripts puedan trabajar correctamente, se debe aplicar [este parche](https://gist.github.com/aaferrari/2bee720d1b8bac7a09ee) en el archivo /usr/bin/xpath
+Si el archivo xpath no existe en el directorio especificado, entonces se lo puede buscar con el comando `which xpath`.
