@@ -11,7 +11,7 @@ else
 fi
 case "$1" in
   [Aa][r][g][e][n][t][i][n][a] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/primeraa/pages/es/fixture.html"
-    partidosFecha=10
+    partidosFecha=15
     ;;
   [Ee][s][p][a][ñ][a] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/espana/pages/es/fixture.html"
     partidosFecha=10
@@ -47,7 +47,7 @@ case "$1" in
     partidosFecha=9
     ;;
   * )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/primeraa/pages/es/fixture.html"
-    partidosFecha=10
+    partidosFecha=15
     ;;
 esac
 
@@ -60,7 +60,7 @@ codificacion=`locale | grep -E -i -o "armscii8|big5(hkscs)?|cp125[1-5]|euc(jp|kr
 iconv -f latin1 -t $codificacion /tmp/fixture.tmp -o /tmp/fixture.tmp.utf8
 
 sed -n '/<div class="fase n1 col-md-12  show">/,/<div class="footerCtn">/p' /tmp/fixture.tmp.utf8 | tr "&" " " > /tmp/fixture.tmp2
-sed '1c<div>\n<div>\n' /tmp/fixture.tmp2 | sed '/<img src/d' | sed 's/ nbsp;/-/g' | sed 's/<\/ul><\/div><\/nav>//g' | sed '/<div class="footerCtn">/d' > /tmp/fixture.html
+sed '1c<div>\n<div>\n' /tmp/fixture.tmp2 | sed '/<img src/d' | sed 's/ nbsp;/-/g' | sed 's/<\/ul><\/div><\/nav>//g' | sed 's/ e_[0-9]*//g' | sed '/<div class="footerCtn">/d' > /tmp/fixture.html
 
 parseador="xpath -q -e '%s' /tmp/fixture.html | tr "'" " "_"'
 
