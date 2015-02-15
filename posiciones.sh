@@ -26,6 +26,14 @@ case "$1" in
     ;;
   [Vv][e][n][e][z][u][e][l][a] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/venezuela/pages/es/posiciones.html"
     ;;
+  [Cc][o][l][o][m][b][i][a] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/colombia/pages/es/posiciones.html"
+    ;;
+  [Mm][e][x][i][c][o] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/mexico/pages/es/posiciones.html"
+    ;;
+  [Bb][n][a][c][i][o][n][a][l] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/nacionalb/pages/es/posiciones.html"
+    ;;
+  [Bb][r][a][s][i][l] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/brasileirao/pages/es/posiciones.html"
+    ;;
   * )  url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/primeraa/pages/es/posiciones.html"
 esac
 
@@ -51,16 +59,16 @@ do
     fi
 done
 
-header="|%4s | %""$ancho_equipo""s | %3s| %3s| %3s| %3s| %3s| %3s| %3s|\n"
-content="|%4s | %""$ancho_equipo""s | %-2s | %-2s | %-2s | %-2s | %-2s | %-2s | %-2s | \n"
+header="|%4s | %""$ancho_equipo""s | %3s| %3s| %3s| %3s| %3s| %3s| %3s| %3s |\n"
+content="|%4s | %""$ancho_equipo""s | %-2s | %-2s | %-2s | %-2s | %-2s | %-2s | %-2s | %3s |\n"
 
 printf "\n%40s\n\n" "POSICIONES"
-printf "$header" "POS" $cabecera_equipo "PTS" "PJ" "PG" "PE" "PP" "GF" "GC"
+printf "$header" "POS" $cabecera_equipo "PTS" "PJ" "PG" "PE" "PP" "GF" "GC" "DF"
 
 for (( i=0;i<${#equipos[*]};i++ ))
 do
-	awk 'BEGIN{printf "'"$content"'", "'${equipos[$i]}'", "'"${equipos[$i+1]//_/ }"'", "'${equipos[$i+2]}'", "'${equipos[$i+3]}'", "'${equipos[$i+4]}'", "'${equipos[$i+5]}'", "'${equipos[$i+6]}'", "'${equipos[$i+7]}'", "'${equipos[$i+8]}'"}'
-	let i=$i+8
+	awk 'BEGIN{printf "'"$content"'", "'${equipos[$i]}'", "'"${equipos[$i+1]//_/ }"'", "'${equipos[$i+2]}'", "'${equipos[$i+3]}'", "'${equipos[$i+4]}'", "'${equipos[$i+5]}'", "'${equipos[$i+6]}'", "'${equipos[$i+7]}'", "'${equipos[$i+8]}'", "'${equipos[$i+9]}'"}'
+	let i=$i+9
 done
 printf "\n"
 exit

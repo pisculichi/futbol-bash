@@ -46,6 +46,18 @@ case "$1" in
   [Vv][e][n][e][z][u][e][l][a] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/venezuela/pages/es/fixture.html"
     partidosFecha=9
     ;;
+  [Cc][o][l][o][m][b][i][a] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/colombia/pages/es/fixture.html"
+    partidosFecha=10
+    ;;
+  [Mm][e][x][i][c][o] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/mexico/pages/es/fixture.html"
+    partidosFecha=9
+    ;;
+  [Bb][n][a][c][i][o][n][a][l] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/nacionalb/pages/es/fixture.html"
+    partidosFecha=11
+    ;;
+  [Bb][r][a][s][i][l] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/brasileirao/pages/es/fixture.html"
+    partidosFecha=9
+    ;;
   * )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/primeraa/pages/es/fixture.html"
     partidosFecha=15
     ;;
