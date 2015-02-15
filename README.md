@@ -65,4 +65,4 @@ Modo de uso:
 * Arch/Manjaro: `pacman -S perl-xml-xpath`
 
 1. Para que los scripts puedan trabajar correctamente, se debe aplicar [este parche](https://gist.github.com/aaferrari/2bee720d1b8bac7a09ee) en el archivo /usr/bin/xpath
-Si el archivo xpath no existe en el directorio especificado, entonces se lo puede buscar con el comando `which xpath`.`
+Si el archivo xpath no existe en el directorio especificado, entonces se lo puede buscar con el comando `which xpath`.
