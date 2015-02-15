@@ -24,6 +24,7 @@ Ejemplo:
 
 **Ligas disponibles:**
 + Argentina
++ B Nacional
 + Uruguay
 + Italia as Calcio
 + Inglaterra as Premier
@@ -33,9 +34,11 @@ Ejemplo:
 + Ecuador
 + Paraguay
 + Bolivia
-+ Peru
++ Perú
 + Venezuela
-
++ México
++ Colombia
++ Brasil
 
 
 ####Copa Libertadores
@@ -52,6 +55,8 @@ Modo de uso:
 ./libertadores.sh semi       //Muestra la llave de semifinales
 ./libertadores.sh final      //Muestra la llave final
 
+
+
 ####xpath
 
 * Debian/Ubuntu (y derivados): `sudo aptitude install libxml-xpath-perl`
@@ -60,4 +65,4 @@ Modo de uso:
 * Arch/Manjaro: `pacman -S perl-xml-xpath`
 
 1. Para que los scripts puedan trabajar correctamente, se debe aplicar [este parche](https://gist.github.com/aaferrari/2bee720d1b8bac7a09ee) en el archivo /usr/bin/xpath
-Si el archivo xpath no existe en el directorio especificado, entonces se lo puede buscar con el comando `which xpath`.
+Si el archivo xpath no existe en el directorio especificado, entonces se lo puede buscar con el comando `which xpath`.`
