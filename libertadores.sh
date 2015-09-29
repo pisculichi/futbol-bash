@@ -138,28 +138,28 @@ function posiciones {
     printf "\n"
 }
 
-
+url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/libertadores/pages/es/fixture.html"
 case "$1" in
   [Pp][o][s][i][c][i][o][n][e][s] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/libertadores/pages/es/posiciones.html"
     posiciones $url
     ;;
-  [Rr][e][p][e][c][h][a][j][e] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/libertadores/pages/es/fixture.html"
+  [Rr][e][p][e][c][h][a][j][e] )
     playoff $url 1 "Repechajes"
     ;;
-  [Gg][r][u][p][o] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/libertadores/pages/es/fixture.html"
+  [Gg][r][u][p][o] )
     # $2 seria el numero del grupo
     resultados_grupo $url $2
     ;;
-  [Oo][c][t][a][v][o][s] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/libertadores/pages/es/fixture.html"
+  [Oo][c][t][a][v][o][s] )
     playoff $url 3 "8° de Final"
     ;;
-  [Cc][u][a][r][t][o][s] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/libertadores/pages/es/fixture.html"
+  [Cc][u][a][r][t][o][s] )
     playoff $url 4 "4° de Final"
     ;;
-  [Ss][e][m][i] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/libertadores/pages/es/fixture.html"
+  [Ss][e][m][i] )
     playoff $url 5 "Semifinal"
     ;;
-  [Ff][i][n][a][l])    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/libertadores/pages/es/fixture.html"
+  [Ff][i][n][a][l])
     playoff $url 6 "Final"
     ;;
   * )
