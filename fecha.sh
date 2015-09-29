@@ -1,78 +1,96 @@
 #!/bin/bash
 # -*- ENCODING: UTF-8 -*-
-if [ -z $2  ]
-then
-  fecha="1"
-elif [ $2 -gt "38" ]
-then
-    fecha="1"
-else
-  fecha=$2
-fi
+
 case "$1" in
   [Aa][r][g][e][n][t][i][n][a] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/primeraa/pages/es/fixture.html"
     partidosFecha=15
+    fechasLiga=30
     ;;
   [Ee][s][p][a][ñ][a] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/espana/pages/es/fixture.html"
     partidosFecha=10
+    fechasLiga=38
     ;;
   [Pp][r][e][m][i][e][r] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/premierleague/pages/es/fixture.html"
     partidosFecha=10
+    fechasLiga=38
     ;;
   [Cc][a][l][c][i][o] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/italia/pages/es/fixture.html"
     partidosFecha=10
+    fechasLiga=38
     ;;
   [Bb][u][n][d][e][s][l][i][g][a] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/alemania/pages/es/fixture.html"
     partidosFecha=9
+    fechasLiga=34
     ;;
   [Uu][r][u][g][u][a][y] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/uruguay/pages/es/fixture.html"
     partidosFecha=8
+    fechasLiga=15
     ;;
   [Cc][h][i][l][e] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/chile/pages/es/fixture.html"
     partidosFecha=9
-    ;;
-  [Ee][c][u][a][d][o][r] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/ecuador/pages/es/fixture.html"
-    partidosFecha=6
-    ;;
-  [Pp][a][r][a][g][u][a][y] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/paraguay/pages/es/fixture.html"
-    partidosFecha=6
-    ;;
-  [Bb][o][l][i][v][i][a] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/bolivia/pages/es/fixture.html"
-    partidosFecha=6
-    ;;
-  [Pp][e][r][u] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/peru/pages/es/fixture.html"
-    partidosFecha=8
+    fechasLiga=15
     ;;
   [Vv][e][n][e][z][u][e][l][a] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/venezuela/pages/es/fixture.html"
-    partidosFecha=9
+    partidosFecha=10
+    fechasLiga=19
     ;;
   [Cc][o][l][o][m][b][i][a] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/colombia/pages/es/fixture.html"
     partidosFecha=10
+    fechasLiga=19
     ;;
   [Mm][e][x][i][c][o] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/mexico/pages/es/fixture.html"
     partidosFecha=9
+    fechasLiga=19
     ;;
   [Bb][n][a][c][i][o][n][a][l] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/nacionalb/pages/es/fixture.html"
     partidosFecha=11
+    fechasLiga=42
     ;;
   [Bb][r][a][s][i][l] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/brasileirao/pages/es/fixture.html"
     partidosFecha=9
+    fechasLiga=38
     ;;
   * )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/primeraa/pages/es/fixture.html"
     partidosFecha=15
+    fechasLiga=30
     ;;
 esac
 
-
 rm /tmp/fixture.tmp* /tmp/fixture.html 2> /dev/null
 wget -O /tmp/fixture.tmp -c -nv $url 2> /dev/null 
-
 # Detectamos el mapa de caracteres que se esta usando
 codificacion=`locale | grep -E -i -o "armscii8|big5(hkscs)?|cp125[1-5]|euc(jp|kr|tw)|gb(18030|2312|k)|georgianps|iso8859[1-9][0-5]?|koi8[rtu]|pt154|tis620|utf-?8|tcvn57121|rk1048" |sort -u`
 iconv -f latin1 -t $codificacion /tmp/fixture.tmp -o /tmp/fixture.tmp.utf8
 
-sed -n '/<div class="fase n1 col-md-12  show">/,/<div class="footerCtn">/p' /tmp/fixture.tmp.utf8 | tr "&" " " > /tmp/fixture.tmp2
-sed '1c<div>\n<div>\n' /tmp/fixture.tmp2 | sed '/<img src/d' | sed 's/ nbsp;/-/g' | sed 's/<\/ul><\/div><\/nav>//g' | sed 's/ e_[0-9]*//g' | sed '/<div class="footerCtn">/d' > /tmp/fixture.html
+fecha=`grep '="active' /tmp/fixture.tmp.utf8 | grep nivel1 | uniq | xpath -q -e '*/a/text()'`
+
+# Si no se recibe la fecha o es mayor a las que posee la liga se usará la fecha actual.
+if [ -z $2  ]
+then
+  fecha_act=$fecha
+elif [ $2 -gt $fechasLiga ]
+then
+    fecha_act=$fecha
+else
+  fecha_act=$2
+fi
+
+if [ $fecha -eq $fecha_act ]
+then
+    tag='<div class="col-md-12 fecha show" data-fase="nivel_1" data-fecha="nivel1_fecha'$fecha_act'">'
+else
+    tag='<div class="col-md-12 fecha" data-fase="nivel_1" data-fecha="nivel1_fecha'$fecha_act'">'    
+fi
+fecha_sig=`expr $fecha_act + 1`
+
+if [ $fecha_act -eq $fechasLiga ]
+then
+	sed -n '/'"$tag"'/,/<div class="footerCtn">/p' /tmp/fixture.tmp.utf8 | sed '1c<div>\n<div><div>' | tr "&" " " > /tmp/fixture.tmp2
+else
+	sed -n '/'"$tag"'/,/<div class="col-md-12 fecha" data-fase="nivel_1" data-fecha="nivel1_fecha'$fecha_sig'">/p' /tmp/fixture.tmp.utf8 | sed 's/<div class="col-md-12 fecha" data-fase="nivel_1" data-fecha="nivel1_fecha'$fecha_sig'">//g' | tr "&" " " > /tmp/fixture.tmp2
+fi
+
+sed '1c<div>\n' /tmp/fixture.tmp2 | sed '/<img src/d' | sed 's/ nbsp;/-/g' | sed 's/ e_[0-9]*//g' | sed '/<div class="footerCtn">/d' > /tmp/fixture.html
 
 parseador="xpath -q -e '%s' /tmp/fixture.html | tr "'" " "_"'
 
@@ -92,8 +110,8 @@ cabecera_local="Local"
 ancho_local=${#cabecera_local}
 cabecera_visitante="Visitante"
 ancho_visitante=${#cabecera_visitante}
-ini=`expr "($fecha -1)*$partidosFecha"`
-fin=`expr "$fecha*$partidosFecha"`
+ini=0
+fin=$partidosFecha
 
 for (( i=$ini;i<$fin;i++ ))
 do
@@ -108,7 +126,7 @@ done
 header="|  %-""$ancho_local""s | %-2s | %-2s | %-3s| %-""$ancho_visitante""s | %-12s | %-7s |\n"
 content="|  %-""$ancho_local""s | %-2s | %-2s | %-2s | %-""$ancho_visitante""s | %-11s | %-6s |\n"
 
-printf "\n%40s\n\n" "Resultados Fecha N° $fecha"
+printf "\n%40s\n\n" "Resultados Fecha N° $fecha_act"
 
 printf "$header" $cabecera_local " " "vs" " " $cabecera_visitante "Día" "Hora"
 
