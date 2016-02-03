@@ -27,7 +27,7 @@ case "$1" in
     fechasLiga=15
     ;;
   [Cc][h][i][l][e] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/chile/pages/es/fixture.html"
-    partidosFecha=9
+    partidosFecha=8
     fechasLiga=15
     ;;
   [Vv][e][n][e][z][u][e][l][a] )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/venezuela/pages/es/fixture.html"
@@ -40,7 +40,7 @@ case "$1" in
     ;;
   [Mm][e][x][i][c][o] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/mexico/pages/es/fixture.html"
     partidosFecha=9
-    fechasLiga=19
+    fechasLiga=17
     ;;
   [Bb][n][a][c][i][o][n][a][l] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/nacionalb/pages/es/fixture.html"
     partidosFecha=11
@@ -62,35 +62,52 @@ wget -O /tmp/fixture.tmp -c -nv $url 2> /dev/null
 codificacion=`locale | grep -E -i -o "armscii8|big5(hkscs)?|cp125[1-5]|euc(jp|kr|tw)|gb(18030|2312|k)|georgianps|iso8859[1-9][0-5]?|koi8[rtu]|pt154|tis620|utf-?8|tcvn57121|rk1048" |sort -u`
 iconv -f latin1 -t $codificacion /tmp/fixture.tmp -o /tmp/fixture.tmp.utf8
 
-fecha=`grep '="active' /tmp/fixture.tmp.utf8 | grep nivel1 | uniq | xpath -q -e '*/a/text()'`
+fecha_act=`grep '="active' /tmp/fixture.tmp.utf8 | grep nivel1 | uniq | xpath -q -e '*/a/text()'`
+fecha_sig=`expr $fecha_act + 1`
+fecha_ant=`expr $fecha_act - 1`
 
 # Si no se recibe la fecha o es mayor a las que posee la liga se usará la fecha actual.
 if [ -z $2  ]
 then
-  fecha_act=$fecha
+  fecha=$fecha_act
 elif [ $2 -gt $fechasLiga ]
 then
-    fecha_act=$fecha
+    fecha=$fecha_act
 else
-  fecha_act=$2
+  fecha=$2
 fi
 
+# tag_aper y tag cierre son los tag que determinan el contenido de la fecha en un div.
+# Sirve para solo quedarnos con el texto que interesa parsear.
+
+# tag_aper depende de la fecha
 if [ $fecha -eq $fecha_act ]
 then
-    tag='<div class="col-md-12 fecha show" data-fase="nivel_1" data-fecha="nivel1_fecha'$fecha_act'">'
+    tag_aper='<div class="col-md-12 fecha show" data-fase="nivel_1" data-fecha="nivel1_fecha'$fecha'">'
 else
-    tag='<div class="col-md-12 fecha" data-fase="nivel_1" data-fecha="nivel1_fecha'$fecha_act'">'    
+    tag_aper='<div class="col-md-12 fecha" data-fase="nivel_1" data-fecha="nivel1_fecha'$fecha'">'
 fi
-fecha_sig=`expr $fecha_act + 1`
 
-if [ $fecha_act -eq $fechasLiga ]
+# tag_cierre depende de la fecha
+if [ $fecha -eq $fechasLiga ]
 then
-	sed -n '/'"$tag"'/,/<div class="footerCtn">/p' /tmp/fixture.tmp.utf8 | sed '1c<div>\n<div><div>' | tr "&" " " > /tmp/fixture.tmp2
+    tag_cierre='<div class="footerCtn">'
+elif [ $fecha -eq $fecha_ant ]
+then
+    tag_cierre='<div class="col-md-12 fecha show" data-fase="nivel_1" data-fecha="nivel1_fecha'$fecha_act'">'
 else
-	sed -n '/'"$tag"'/,/<div class="col-md-12 fecha" data-fase="nivel_1" data-fecha="nivel1_fecha'$fecha_sig'">/p' /tmp/fixture.tmp.utf8 | sed 's/<div class="col-md-12 fecha" data-fase="nivel_1" data-fecha="nivel1_fecha'$fecha_sig'">//g' | tr "&" " " > /tmp/fixture.tmp2
+    tag_cierre='<div class="col-md-12 fecha" data-fase="nivel_1" data-fecha="nivel1_fecha'`expr $fecha + 1`'">'
 fi
 
-sed '1c<div>\n' /tmp/fixture.tmp2 | sed '/<img src/d' | sed 's/ nbsp;/-/g' | sed 's/ e_[0-9]*//g' | sed '/<div class="footerCtn">/d' > /tmp/fixture.html
+# Obtengo el contenido de la fecha a parsear.
+sed -n '/'"$tag_aper"'/,/'"$tag_cierre"'/p' /tmp/fixture.tmp.utf8 | sed 's/'"$tag_cierre"'//g' | tr "&" " " > /tmp/fixture.tmp2
+sed '1c<div><div><div>\n' /tmp/fixture.tmp2 | sed '/<img src/d' | sed 's/ nbsp;/-/g' | sed 's/ e_[0-9]*//g' | sed '/<div class="footerCtn">/d' > /tmp/fixture.html
+if [ $fecha -eq $fechasLiga ]
+then
+    head -n -3 /tmp/fixture.html > /tmp/fixture1.html
+    mv /tmp/fixture1.html /tmp/fixture.html
+fi
+echo "</div></div>" >> /tmp/fixture.html
 
 parseador="xpath -q -e '%s' /tmp/fixture.html | tr "'" " "_"'
 
@@ -123,10 +140,10 @@ do
     fi
 done
 
-header="|  %-""$ancho_local""s | %-2s | %-2s | %-3s| %-""$ancho_visitante""s | %-12s | %-7s |\n"
-content="|  %-""$ancho_local""s | %-2s | %-2s | %-2s | %-""$ancho_visitante""s | %-11s | %-6s |\n"
+header="|  %-""$ancho_local""s | %-2s | %-2s | %-3s| %-""$ancho_visitante""s | %-12s |  %-5s  |\n"
+content="|  %-""$ancho_local""s | %-2s | %-2s | %-2s | %-""$ancho_visitante""s | %-11s | %-7s |\n"
 
-printf "\n%40s\n\n" "Resultados Fecha N° $fecha_act"
+printf "\n%40s\n\n" "Resultados Fecha N° $fecha"
 
 printf "$header" $cabecera_local " " "vs" " " $cabecera_visitante "Día" "Hora"
 
@@ -136,4 +153,3 @@ do
 done
 printf "\n"
 exit
-

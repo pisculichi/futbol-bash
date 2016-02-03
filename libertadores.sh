@@ -92,8 +92,23 @@ function resultados_grupo {
 
     horas=($( sh -c "`printf "$parseador" '//div[@class="col-lg-6 col-md-12 fecha"][@data-grupo="'$num_grupo'"]//div[@class="hora col-md-3 col-sm-3 col-xs-4 mc-time"]//text()'`"))
 
-    header="|  %-25s | %-2s | %-2s | %-3s| %-25s | %-12s | %-10s |\n"
-    content="|  %-25s | %-2s | %-2s | %-2s | %-25s | %-11s | %-10s |\n"
+    cabecera_local="Local"
+    ancho_local=${#cabecera_local}
+    cabecera_visitante="Visitante"
+    ancho_visitante=${#cabecera_visitante}
+    cant_partidos=${#local[*]}
+
+    for (( i=0;i<$cant_partidos;i++ ))
+    do
+	if [ ${#local[$i]} -ge $ancho_local ]; then
+	    ancho_local=${#local[$i]}
+	fi
+	if [ ${#visita[$i]} -ge $ancho_visitante ]; then
+	    ancho_visitante=${#visita[$i]}
+	fi
+    done
+    header="|  %-"$ancho_local"s | %-2s | %-2s | %-3s| %-"$ancho_visitante"s | %-12s |  %-5s  |\n"
+    content="|  %-"$ancho_local"s | %-2s | %-2s | %-2s | %-"$ancho_visitante"s | %-11s | %-7s |\n"
 
     printf "\n%40s\n" "GRUPO N° $num_grupo"
     for (( i=0;i<12;i++ ))
@@ -102,7 +117,7 @@ function resultados_grupo {
 	if [ $(($i % 2)) -eq 0 ]
 	then
 	    printf "\n%40s\n" "Fecha  $j"
-	    printf "$header" "Local" " " "vs" " " "Visitante" "Día" "Hora"
+	    printf "$header" $cabecera_local " " "vs" " " $cabecera_visitante "Día" "Hora"
 	fi
 	awk 'BEGIN{printf "'"$content"'", "'"${local[$i]//_/ }"'", "'${gol_local[$i]}'", "vs", "'${gol_visita[$i]}'", "'"${visita[$i]//_/ }"'", "'${dias[$i]}'", "'"${horas[$i]//_/ }"'"}'
     done
@@ -121,16 +136,27 @@ function posiciones {
     sed  '/<img src=/d' /tmp/posiciones.html2 | sed 's/nbsp;//g' | sed 's/<\/div>//g' | sed 's/<div class="border">//g' | sed 's/<span class="badge">//g' | sed 's/<\/span>//g' | sed '/<tr><td colspan="20"><span class="leyenda">/d' | sed '/<span class="p_europa/d' | sed '/<span class="p_desciende/d' | sed '/><table/c<table>' > /tmp/posiciones.html
 
     equipos=( `xpath -q -e '/table/tr//td/text()' /tmp/posiciones.html | tr " " "_"` )
+    
+    cabecera_equipo="Equipo"
+    ancho_equipo=${#cabecera_equipo}
+    cant_equipos=${#equipos[*]}
 
-    header="|%4s | %30s |%3s |%3s |%3s |%3s |%3s |%3s |%3s |%3s |\n"
-    content="|%4s | %30s | %2s | %2s | %2s | %2s | %2s | %2s | %2s | %2s | \n"
+    for (( i=0;i<$cant_equipos;i++ ))
+    do
+	if [ ${#equipos[$i]} -ge $ancho_equipo ]; then
+	    ancho_equipo=${#equipos[$i]}
+	fi
+    done
+    
+    header="|%4s | %"$ancho_equipo"s |%3s |%3s |%3s |%3s |%3s |%3s |%3s |%3s |\n"
+    content="|%4s | %"$ancho_equipo"s | %2s | %2s | %2s | %2s | %2s | %2s | %2s | %2s | \n"
 
     printf "\n"
 
     for (( i=0;i<8;i++ ))
     do
 	printf "%40s \n\n" "Grupo `expr $i + 1`" 
-	printf "$header" "POS" "EQUIPO" "PTS" "PJ" "PG" "PE" "PP" "GF" "GC" "DF"
+	printf "$header" "POS" $cabecera_equipo "PTS" "PJ" "PG" "PE" "PP" "GF" "GC" "DF"
 	for (( j=$i*10*4;j<10*4*($i+1);j++))
 	do
 	    awk 'BEGIN{printf "'"$content"'", "'${equipos[$j]}'", "'"${equipos[$j+1]//_/ }"'", "'${equipos[$j+2]}'", "'${equipos[$j+3]}'", "'${equipos[$j+4]}'", "'${equipos[$j+5]}'", "'${equipos[$j+6]}'", "'${equipos[$j+7]}'", "'${equipos[$j+8]}'", "'${equipos[$j+9]}'"}'

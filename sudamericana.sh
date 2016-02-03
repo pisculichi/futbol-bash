@@ -48,8 +48,8 @@ function playoff {
 	fi
     done
 
-    header="|  %-""$ancho_local""s | %-2s | %-2s | %-3s| %-""$ancho_visitante""s | %-12s | %-6s |\n"
-    content="|  %-""$ancho_local""s | %-2s | %-2s | %-2s | %-""$ancho_visitante""s | %-11s | %-6s |\n"
+    header="|  %-""$ancho_local""s | %-2s | %-2s | %-3s| %-""$ancho_visitante""s | %-12s |  %-5s  |\n"
+    content="|  %-""$ancho_local""s | %-2s | %-2s | %-2s | %-""$ancho_visitante""s | %-11s | %-7s |\n"
 
     printf "\n%40s\n" "$nombre_fase"
 

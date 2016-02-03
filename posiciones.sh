@@ -59,8 +59,8 @@ do
     fi
 done
 
-header="|%4s | %""$ancho_equipo""s | %3s| %3s| %3s| %3s| %3s| %3s| %3s| %3s |\n"
-content="|%4s | %""$ancho_equipo""s | %-2s | %-2s | %-2s | %-2s | %-2s | %-2s | %-2s | %3s |\n"
+header="|%4s | %""$ancho_equipo""s | %3s|%3s |%3s |%3s |%3s |%3s |%3s | %3s |\n"
+content="|%4s | %""$ancho_equipo""s | %2s | %2s | %2s | %2s | %2s | %2s | %2s | %3s |\n"
 
 printf "\n%40s\n\n" "POSICIONES"
 printf "$header" "POS" $cabecera_equipo "PTS" "PJ" "PG" "PE" "PP" "GF" "GC" "DF"
