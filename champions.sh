@@ -12,12 +12,15 @@ function playoff {
     codificacion=`locale | grep -E -i -o "armscii8|big5(hkscs)?|cp125[1-5]|euc(jp|kr|tw)|gb(18030|2312|k)|georgianps|iso8859[1-9][0-5]?|koi8[rtu]|pt154|tis620|utf-?8|tcvn57121|rk1048" | sort -u`
     iconv -f latin1 -t $codificacion /tmp/fixture.tmp -o /tmp/fixture.tmp.utf8
     sed 's/ show//g' /tmp/fixture.tmp.utf8 > /tmp/fixture.tmp
-    sed -n '/<div class="fase n'"$fase_ini"' col-md-12 ">/,/<div class="fase n'"$fase_fin"' col-md-12 ">/p' /tmp/fixture.tmp | tr "&" " " > /tmp/fixture.tmp2
-    sed '1c<div><div>\n' /tmp/fixture.tmp2 | sed '/<img src/d' | sed 's/ nbsp;/-/g' | sed 's/ e_[0-9]*//g' | sed '/<div class="footerCtn">/d' | sed 's/\(.*\)<\/div><\/div><\/div>//g' | sed '/<div class="fase n'"$fase_fin"'/d' > /tmp/fixture.html
-    if [ $2 -ne 6 ]
+    sed -n '/<div class="fase n'"$fase_ini"' col-md-12 ">/,/<div class="fase n'"$fase_fin"' col-md-12 ">/p' /tmp/fixture.tmp |  sed 's/\t//g' | tr "&" " " > /tmp/fixture.tmp2
+    sed 's/<\/img>//g' /tmp/fixture.tmp2 | sed 's/<img src//g' | sed 's/ nbsp;/-/g' | sed 's/ e_[0-9]*//g' | sed '/<div class="footerCtn">/d' | sed '/<div class="fase n'"$fase_fin"'/d' > /tmp/fixture.html
+    if [ $2 -eq 5 ]
     then
-        echo "</div></div>" >> /tmp/fixture.html
+        sed '1c<div><div><div><div><div><div>\n' /tmp/fixture.html > /tmp/fixture.html2
+    else
+        sed '1c<div><div><div>\n' /tmp/fixture.html > /tmp/fixture.html2
     fi
+    mv /tmp/fixture.html2 /tmp/fixture.html
     parseador="xpath -q -e '%s' /tmp/fixture.html | tr "'" " "_"'
 
     local=($( sh -c "`printf "$parseador" '//div[@class="col-md-5 col-sm-5 col-xs-10 local"]//div[@class="equipo col-xs-4"]/text()'`" ))
@@ -71,7 +74,7 @@ function resultados_grupo {
     iconv -f latin1 -t $codificacion /tmp/fixture.tmp -o /tmp/fixture.tmp.utf8
     sed 's/ show//g' /tmp/fixture.tmp.utf8 > /tmp/fixture.tmp
     sed -n '/<div class="fase n1 col-md-12 ">/,/<div class="fase n2 col-md-12 ">/p' /tmp/fixture.tmp | tr "&" " " > /tmp/fixture.tmp2
-    sed '1c<div>\n' /tmp/fixture.tmp2 |sed '/<img src/d' | sed 's/ nbsp;/-/g' | sed 's/ e_[0-9]*//g' | sed '/<div class="footerCtn">/d' | sed '/<div class="fase n2/d' > /tmp/fixture.html
+    sed '1c<div>\n' /tmp/fixture.tmp2 | sed 's/<img src//g' | sed 's/<\/img>//g' | sed 's/ nbsp;/-/g' | sed 's/ e_[0-9]*//g' | sed '/<div class="footerCtn">/d' | sed '/<div class="fase n2/d' > /tmp/fixture.html
 
     parseador="xpath -q -e '%s' /tmp/fixture.html | tr "'" " "_"'
 

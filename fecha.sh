@@ -101,7 +101,7 @@ fi
 
 # Obtengo el contenido de la fecha a parsear.
 sed -n '/'"$tag_aper"'/,/'"$tag_cierre"'/p' /tmp/fixture.tmp.utf8 | sed 's/'"$tag_cierre"'//g' | tr "&" " " > /tmp/fixture.tmp2
-sed '1c<div><div><div>\n' /tmp/fixture.tmp2 | sed '/<img src/d' | sed 's/ nbsp;/-/g' | sed 's/ e_[0-9]*//g' | sed '/<div class="footerCtn">/d' > /tmp/fixture.html
+sed '1c<div><div><div>\n' /tmp/fixture.tmp2 | sed 's/<\/img>//g' | sed 's/<img src//g' | sed 's/ nbsp;/-/g' | sed 's/ e_[0-9]*//g' | sed '/<div class="footerCtn">/d' > /tmp/fixture.html
 if [ $fecha -eq $fechasLiga ]
 then
     head -n -3 /tmp/fixture.html > /tmp/fixture1.html

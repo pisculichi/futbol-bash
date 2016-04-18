@@ -73,7 +73,8 @@ else
 	sed -n '/<div class="col-md-12 fecha show" data-fase="nivel_1" data-fecha="nivel1_fecha'$fecha_act'">/,/<div class="col-md-12 fecha" data-fase="nivel_1" data-fecha="nivel1_fecha'$fecha_sig'">/p' /tmp/fixture.tmp.utf8 | sed 's/<div class="col-md-12 fecha" data-fase="nivel_1" data-fecha="nivel1_fecha'$fecha_sig'">//g' | tr "&" " " > /tmp/fixture.tmp2
 fi
 
-sed '1c<div>\n' /tmp/fixture.tmp2 | sed '/<img src/d' | sed 's/ nbsp;/-/g' | sed 's/ e_[0-9]*//g' | sed '/<div class="footerCtn">/d' > /tmp/fixture.html
+sed '1c<div><div><div>\n' /tmp/fixture.tmp2 | sed '/<img src/d' | sed 's/ nbsp;/-/g' | sed 's/ e_[0-9]*//g' | sed '/<div class="footerCtn">/d' > /tmp/fixture.html
+echo "</div></div>" >> /tmp/fixture.html
 
 parseador="xpath -q -e '%s' /tmp/fixture.html | tr "'" " "_"'
 
