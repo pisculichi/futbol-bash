@@ -14,8 +14,7 @@ function playoff {
     sed 's/ show//g' /tmp/fixture.tmp.utf8 > /tmp/fixture.tmp
     sed -n '/<div class="fase n'"$fase_ini"' col-md-12 ">/,/<div class="fase n'"$fase_fin"' col-md-12 ">/p' /tmp/fixture.tmp | tr "&" " " > /tmp/fixture.tmp2
     sed 's/<\/img>//g' /tmp/fixture.tmp2 | sed 's/<img src//g' | sed 's/ nbsp;/-/g' | sed 's/ e_[0-9]*//g' | sed '/<div class="footerCtn">/d' | sed '/<div class="fase n'"$fase_fin"'/d' > /tmp/fixture.html
-    if [ $2 -eq 6 ]
-    then
+    if [ $2 -eq 8 ]; then
         sed '1c<div><div><div><div><div><div>\n' /tmp/fixture.html > /tmp/fixture.html2
     else
         sed '1c<div><div><div>\n' /tmp/fixture.html > /tmp/fixture.html2
@@ -78,8 +77,8 @@ function resultados_grupo {
     codificacion=`locale | grep -E -i -o "armscii8|big5(hkscs)?|cp125[1-5]|euc(jp|kr|tw)|gb(18030|2312|k)|georgianps|iso8859[1-9][0-5]?|koi8[rtu]|pt154|tis620|utf-?8|tcvn57121|rk1048" |sort -u`
     iconv -f latin1 -t $codificacion /tmp/fixture.tmp -o /tmp/fixture.tmp.utf8
     sed 's/ show//g' /tmp/fixture.tmp.utf8 > /tmp/fixture.tmp
-    sed -n '/<div class="fase n2 col-md-12 ">/,/<div class="fase n3 col-md-12 ">/p' /tmp/fixture.tmp | tr "&" " " > /tmp/fixture.tmp2
-    sed '1c<div>\n' /tmp/fixture.tmp2 | sed 's/<\/img>//g' | sed 's/<img src//g' | sed 's/ nbsp;/-/g' | sed 's/ e_[0-9]*//g' | sed '/<div class="footerCtn">/d' | sed '/<div class="fase n3/d' > /tmp/fixture.html
+    sed -n '/<div class="fase n4 col-md-12 ">/,/<div class="fase n5 col-md-12 ">/p' /tmp/fixture.tmp | tr "&" " " > /tmp/fixture.tmp2
+    sed '1c<div>\n' /tmp/fixture.tmp2 | sed 's/<\/img>//g' | sed 's/<img src//g' | sed 's/ nbsp;/-/g' | sed 's/ e_[0-9]*//g' | sed '/<div class="footerCtn">/d' | sed '/<div class="fase n5/d' > /tmp/fixture.html
 
     parseador="xpath -q -e '%s' /tmp/fixture.html | tr "'" " "_"'
 
@@ -89,7 +88,7 @@ function resultados_grupo {
 
     gol_visita=($( sh -c "`printf "$parseador" '//div[@class="col-lg-6 col-md-12 fecha"][@data-grupo="'$num_grupo'"]//div[@class="col-md-5  col-sm-5 col-xs-10 visitante"]//div[@class="resultado col-xs-3"]/text()'`" ))
 
-    visita=($( sh -c "`printf "$parseador" '//div[@class="col-lg-6 col-md-12 fecha"][@data-grupo="'$num_grupo'"]//div[@class="row match-inner"]//div[2]//div[@class="equipo col-xs-4"]/text()'`" ))
+    visita=($( sh -c "`printf "$parseador" '//div[@class="col-lg-6 col-md-12 fecha"][@data-grupo="'$num_grupo'"]//div[@class="col-md-5  col-sm-5 col-xs-10 visitante"]//div[@class="equipo col-xs-4"]/text()'`" ))
 
     dias=($( sh -c "`printf "$parseador" '//div[@class="col-lg-6 col-md-12 fecha"][@data-grupo="'$num_grupo'"]//div[@class="dia col-md-3 col-sm-3 col-xs-4 mc-date"]//text()'`"))
 
@@ -135,7 +134,7 @@ function posiciones {
 
     iconv -f  iso-8859-1  -t utf8 /tmp/posiciones.tmp -o /tmp/posiciones.tmp.utf8
 
-    sed -n '/<table class="tabla_fase table table-condensed" id="pos_n2">/,/<\/table>/p' /tmp/posiciones.tmp.utf8 | tr "&" " " > /tmp/posiciones.html2
+    sed -n '/<table class="tabla_fase table table-condensed" id="pos_n4">/,/<\/table>/p' /tmp/posiciones.tmp.utf8 | tr "&" " " > /tmp/posiciones.html2
     sed  '/<img src=/d' /tmp/posiciones.html2 | sed 's/nbsp;//g' | sed 's/<\/div>//g' | sed 's/<div class="border">//g' | sed 's/<span class="badge">//g' | sed 's/<\/span>//g' | sed '/<tr><td colspan="20"><span class="leyenda">/d' | sed '/<span class="p_europa/d' | sed '/<span class="p_desciende/d' | sed '/><table/c<table>' > /tmp/posiciones.html
 
     equipos=( `xpath -q -e '/table/tr//td/text()' /tmp/posiciones.html | tr " " "_"` )
@@ -183,16 +182,16 @@ case "$1" in
     resultados_grupo $url $2
     ;;
   [Oo][c][t][a][v][o][s] )
-    playoff $url 3 "8° de Final"
+    playoff $url 5 "8° de Final"
     ;;
   [Cc][u][a][r][t][o][s] )
-    playoff $url 4 "4° de Final"
+    playoff $url 6 "4° de Final"
     ;;
   [Ss][e][m][i] )
-    playoff $url 5 "Semifinal"
+    playoff $url 7 "Semifinal"
     ;;
   [Ff][i][n][a][l])
-    playoff $url 6 "Final"
+    playoff $url 8 "Final"
     ;;
   * )
     ;;
