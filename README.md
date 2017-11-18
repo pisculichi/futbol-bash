@@ -1,6 +1,7 @@
-#Scripts de fútbol
+# Scripts de fútbol
+Scripts para obtener en tiempo real resultados y fixtures de distintas ligas de fútbol.
 
-####fecha.sh (requiere tener instalado xpath)
+#### fecha.sh (requiere tener instalado xpath)
 
 Obtené los resultados/fixture de la liga.
 
@@ -11,7 +12,7 @@ Ejemplo:
 ./fecha.sh premier 4
 
 
-####posiciones.sh (requiere tener instalado xpath)
+#### posiciones.sh (requiere tener instalado xpath)
 
 Obtené las posiciones de la liga.
 
@@ -41,7 +42,7 @@ Ejemplo:
 + Brasil
 
 
-####Copa Libertadores
+#### Copa Libertadores
 
 Observa la fase de grupos, resultados de cada grupo, así como también las fases eliminatorias
 
@@ -57,7 +58,7 @@ Modo de uso:
 ./libertadores.sh final      //Muestra la llave final
 
 
-####xpath
+#### Dependencias (xpath)
 
 * Debian/Ubuntu (y derivados): `sudo aptitude install libxml-xpath-perl`
 * Fedora: `yum install perl-XML-XPath`
