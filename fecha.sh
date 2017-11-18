@@ -140,14 +140,14 @@ do
     fi
 done
 
-header="|  %-""$ancho_local""s    [ %-1s ] %-2s [ %-1s ]    %-""$ancho_visitante""s  | %-12s | %-7s |\n"
+header="|  %-""$ancho_local""s    [ %-1s ] %-2s [ %-1s ]    %-""$ancho_visitante""s  | %-11s | %-7s |\n"
 content="|  \033[1;31m%-""$ancho_local""s\033[0m    [ \033[1;31m%-1s\033[0m ] %-2s [ \033[1;34m%-1s\033[0m ]    \033[1;34m%-""$ancho_visitante""s\033[0m  | %-11s | %-7s |\n"
 
-printf "\n%50s\n\n" "Resultados Fecha N° $fecha"
+printf "\n\e[1m%50s\e[0m\n\n" "Resultados Fecha N° $fecha"
 
 printf "%78s\n" | tr " " -
 
-printf "$header" $cabecera_local "-" " vs " "-" $cabecera_visitante "Día" "Hora"
+printf "$header" $cabecera_local "-" " vs " "-" $cabecera_visitante "DIA" "HORA"
 
 printf "%78s\n" | tr " " -
 
