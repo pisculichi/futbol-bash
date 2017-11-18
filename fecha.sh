@@ -143,17 +143,19 @@ done
 header="|  %-""$ancho_local""s    [ %-1s ] %-2s [ %-1s ]    %-""$ancho_visitante""s  | %-11s | %-7s |\n"
 content="|  \033[1;31m%-""$ancho_local""s\033[0m    [ \033[1;31m%-1s\033[0m ] %-2s [ \033[1;34m%-1s\033[0m ]    \033[1;34m%-""$ancho_visitante""s\033[0m  | %-11s | %-7s |\n"
 
+char=$(bc -l <<< "$(printf "|  %-""$ancho_local""s    [ %-1s ] %-2s [ %-1s ]    %-""$ancho_visitante""s  | %-11s | %-7s |\n" LOCAL "-" " vs " "-"  VISITANTE "DIA" "HORA" | wc -c) - 1")
+
 printf "\n\e[1m%50s\e[0m\n\n" "Resultados Fecha N° $fecha"
 
-printf "%78s\n" | tr " " -
+printf "%${char}s\n" | tr " " -
 
 printf "$header" $cabecera_local "-" " vs " "-" $cabecera_visitante "DIA" "HORA"
 
-printf "%78s\n" | tr " " -
+printf "%${char}s\n" | tr " " -
 
 for (( i=$ini;i<$fin;i++ ))
 do
 	awk 'BEGIN{printf "'"$content"'", "'"${local[$i]//_/ }"'", "'${gol_local[$i]}'", " vs ", "'${gol_visita[$i]}'", "'"${visita[$i]//_/ }"'", "'${dias[$i]}'", "'"${horas[$i]//_/ }"'"}'
-	printf "%78s\n" | tr " " - 
+	printf "%${char}s\n" | tr " " -
 done
 exit
