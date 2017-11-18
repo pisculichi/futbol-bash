@@ -109,7 +109,7 @@ then
 fi
 echo "</div></div>" >> /tmp/fixture.html
 
-parseador="xpath -q -e '%s' /tmp/fixture.html | tr "'" " "_"'
+parseador="xpath -q -e '%s' /tmp/fixture.html | sed -e 's/Ã¡/á/g' -e 's/Ã­/í/g' -e 's/Ã³/ó/g' -e 's/Ã©/é/g' -e 's/Ãº/ú/g' | tr "'" " "_"'
 
 local=($( sh -c "`printf "$parseador" '//div[@class="col-md-5 col-sm-5 col-xs-10 local"]//div[@class="equipo col-xs-4"]/text()'`" ))
 
@@ -123,9 +123,9 @@ dias=($( sh -c "`printf "$parseador" '//div[@class="dia col-md-3 col-sm-3 col-xs
 
 horas=($( sh -c "`printf "$parseador" '//div[@class="hora col-md-3 col-sm-3 col-xs-4 mc-time"]//text()'`" ))
 
-cabecera_local="Local"
+cabecera_local="LOCAL"
 ancho_local=${#cabecera_local}
-cabecera_visitante="Visitante"
+cabecera_visitante="VISITANTE"
 ancho_visitante=${#cabecera_visitante}
 ini=0
 fin=$partidosFecha
@@ -140,16 +140,20 @@ do
     fi
 done
 
-header="|  %-""$ancho_local""s | %-2s | %-2s | %-3s| %-""$ancho_visitante""s | %-12s |  %-5s  |\n"
-content="|  %-""$ancho_local""s | %-2s | %-2s | %-2s | %-""$ancho_visitante""s | %-11s | %-7s |\n"
+header="|  %-""$ancho_local""s    [ %-1s ] %-2s [ %-1s ]    %-""$ancho_visitante""s  | %-12s | %-7s |\n"
+content="|  \033[1;31m%-""$ancho_local""s\033[0m    [ \033[1;31m%-1s\033[0m ] %-2s [ \033[1;34m%-1s\033[0m ]    \033[1;34m%-""$ancho_visitante""s\033[0m  | %-11s | %-7s |\n"
 
-printf "\n%40s\n\n" "Resultados Fecha N° $fecha"
+printf "\n%50s\n\n" "Resultados Fecha N° $fecha"
 
-printf "$header" $cabecera_local " " "vs" " " $cabecera_visitante "Día" "Hora"
+printf "%78s\n" | tr " " -
+
+printf "$header" $cabecera_local "-" " vs " "-" $cabecera_visitante "Día" "Hora"
+
+printf "%78s\n" | tr " " -
 
 for (( i=$ini;i<$fin;i++ ))
 do
-	awk 'BEGIN{printf "'"$content"'", "'"${local[$i]//_/ }"'", "'${gol_local[$i]}'", "vs", "'${gol_visita[$i]}'", "'"${visita[$i]//_/ }"'", "'${dias[$i]}'", "'"${horas[$i]//_/ }"'"}'
+	awk 'BEGIN{printf "'"$content"'", "'"${local[$i]//_/ }"'", "'${gol_local[$i]}'", " vs ", "'${gol_visita[$i]}'", "'"${visita[$i]//_/ }"'", "'${dias[$i]}'", "'"${horas[$i]//_/ }"'"}'
+	printf "%78s\n" | tr " " - 
 done
-printf "\n"
 exit
