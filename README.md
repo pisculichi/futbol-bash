@@ -1,25 +1,25 @@
-#Scripts de fútbol
+## Scripts de fútbol
 
-####fecha.sh (requiere tener instalado xpath)
+#### fecha.sh (requiere tener instalado xpath)
 
 Obtené los resultados/fixture de la liga.
 
 Modo de uso:
-./fecha.sh [liga] [n° fecha]
+`./fecha.sh [liga] [n° fecha]`
 
 Ejemplo:
-./fecha.sh premier 4
+`./fecha.sh premier 4`
 
 
-####posiciones.sh (requiere tener instalado xpath)
+#### posiciones.sh (requiere tener instalado xpath)
 
 Obtené las posiciones de la liga.
 
-Modo de uso:
-./posiciones.sh [liga] 
+**Modo de uso:**
+`./posiciones.sh [liga]`
 
-Ejemplo:
-./posiciones.sh calcio
+*Ejemplo:*
+`./posiciones.sh calcio`
 
 
 **Ligas disponibles:**
@@ -41,23 +41,20 @@ Ejemplo:
 + Brasil
 
 
-####Copa Libertadores
+#### Copa Libertadores, Sudamericana, Champions y Mundial
 
 Observa la fase de grupos, resultados de cada grupo, así como también las fases eliminatorias
 
 Modo de uso:
-./libertadores.sh posiciones //Muestra las posiciones de cada grupo
-./libertadores.sh grupo 1    //Muestra el fixture y resultados del grupo 1 
-./libertadores.sh octavos    //Muestra la llave de octavos de final
-
-./libertadores.sh cuartos    //Muestra la llave de cuartos de final
-
-./libertadores.sh semi       //Muestra la llave de semifinales
-
-./libertadores.sh final      //Muestra la llave final
+`./libertadores.sh posiciones` //Muestra las posiciones de cada grupo
+`./libertadores.sh grupo 1`    //Muestra el fixture y resultados del grupo 1 
+`./libertadores.sh octavos`    //Muestra la llave de octavos de final
+`./libertadores.sh cuartos`    //Muestra la llave de cuartos de final
+`./libertadores.sh semi`       //Muestra la llave de semifinales
+`./libertadores.sh final`      //Muestra la llave final
 
 
-####xpath
+#### xpath
 
 * Debian/Ubuntu (y derivados): `sudo aptitude install libxml-xpath-perl`
 * Fedora: `yum install perl-XML-XPath`
