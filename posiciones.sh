@@ -43,10 +43,11 @@ wget -O /tmp/posiciones.tmp -c -nv $url 2> /dev/null
 
 # Detectamos el mapa de caracteres que se esta usando
 codificacion=`locale | grep -E -i -o "armscii8|big5(hkscs)?|cp125[1-5]|euc(jp|kr|tw)|gb(18030|2312|k)|georgianps|iso8859[1-9][0-5]?|koi8[rtu]|pt154|tis620|utf-?8|tcvn57121|rk1048" |sort -u`
-iconv -f latin1 -t $codificacion /tmp/posiciones.tmp -o /tmp/posiciones.tmp.utf8
+#iconv -f latin1 -t $codificacion /tmp/posiciones.tmp -o /tmp/posiciones.tmp.utf8
+cp /tmp/posiciones.tmp /tmp/posiciones.tmp.utf8
 
-sed -n '/<table class="tabla_fase table table-condensed" id="pos_n1">/,/<\/table>/p' /tmp/posiciones.tmp.utf8 | tr "&" " " > /tmp/posiciones.html2
-sed  '/<img src=/d' /tmp/posiciones.html2 | sed 's/nbsp;//g' | sed 's/<\/div>//g' | sed 's/<div class="border">//g' | sed 's/<span class="badge">//g' | sed 's/<\/span>//g' | sed '/<tr><td colspan="20"><span class="leyenda">/d' | sed '/<span class="p_europa/d' | sed '/<span class="p_desciende/d' > /tmp/posiciones.html
+sed -n '/<table class="tabla_fase table table-condensed" id="pos_n1">/,/<\/table>/p' /tmp/posiciones.tmp.utf8 |  tr "&" " " > /tmp/posiciones.html2
+sed  '/<img src=/d' /tmp/posiciones.html2 | sed 's/nbsp;//g' | sed 's/<\/div>//g' | sed 's/<div class="border">//g' | sed 's/<span class="badge">//g' | sed 's/<\/span>//g' | sed '/<tr><td colspan="20"><span class="leyenda">/d' | sed '/<span class="p_europa/d' | sed '/<span class="p_desciende/d' | sed 's/<\/ul><\/nav>//g' > /tmp/posiciones.html
 
 equipos=( `xpath -q -e '/table/tr//td/text()' /tmp/posiciones.html | tr " " "_"` )
 
