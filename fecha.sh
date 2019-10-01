@@ -3,8 +3,8 @@
 
 case "$1" in
   [Aa][r][g][e][n][t][i][n][a] ) url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/primeraa/pages/es/fixture.html"
-    partidosFecha=13
-    fechasLiga=25
+    partidosFecha=12
+    fechasLiga=23
     ;;
   [Ee][s][p][a][ñ][a] )    url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/espana/pages/es/fixture.html"
     partidosFecha=10
@@ -51,8 +51,8 @@ case "$1" in
     fechasLiga=38
     ;;
   * )	url="http://estadisticas-deportes.tycsports.com/html/v3/htmlCenter/data/deportes/futbol/primeraa/pages/es/fixture.html"
-    partidosFecha=13
-    fechasLiga=25
+    partidosFecha=12
+    fechasLiga=23
     ;;
 esac
 
