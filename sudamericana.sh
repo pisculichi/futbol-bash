@@ -13,11 +13,12 @@ function playoff {
 #    iconv -f latin1 -t $codificacion /tmp/fixture.tmp -o /tmp/fixture.tmp.utf8
     cp /tmp/fixture.tmp /tmp/fixture.tmp.utf8
     sed 's/ show//g' /tmp/fixture.tmp.utf8 > /tmp/fixture.tmp
-    sed -n '/<div class="fase n'"$fase_ini"' col-md-12 ">/,/<div class="fase n'"$fase_fin"' col-md-12 ">/p' /tmp/fixture.tmp | tr "&" " " > /tmp/fixture.tmp2
+    sed -n '/<div class="fase n'"$fase_ini"' col-md-12 ">/,/<div class="fase n'"$fase_fin"' col-md-12 ">/p' /tmp/fixture.tmp | sed '/<script/,/<\/script>/d' | tr "&" " " > /tmp/fixture.tmp2
     sed 's/<\/img>//g' /tmp/fixture.tmp2 | sed 's/<img src//g' | sed 's/ nbsp;/-/g' | sed 's/ e_[0-9]*//g' | sed '/<div class="footerCtn">/d' | sed '/<div class="fase n'"$fase_fin"'/d' > /tmp/fixture.html
     if [ $2 -gt 5 ]
     then
-        sed '1c<div><div><div><div><div><div>\n' /tmp/fixture.html > /tmp/fixture.html2
+        sed '1c<div><div><div><div><div>' /tmp/fixture.html > /tmp/fixture.html2
+        sed -i '2d ' /tmp/fixture.html2
     else
         sed '1c<div><div><div>\n' /tmp/fixture.html > /tmp/fixture.html2
     fi

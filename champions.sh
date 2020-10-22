@@ -13,13 +13,14 @@ function playoff {
 #    iconv -f latin1 -t $codificacion /tmp/fixture.tmp -o /tmp/fixture.tmp.utf8
     cp /tmp/fixture.tmp /tmp/fixture.tmp.utf8
     sed 's/ show//g' /tmp/fixture.tmp.utf8 > /tmp/fixture.tmp
-    sed -n '/<div class="fase n'"$fase_ini"' col-md-12 ">/,/<div class="fase n'"$fase_fin"' col-md-12 ">/p' /tmp/fixture.tmp |  sed 's/\t//g' | tr "&" " " > /tmp/fixture.tmp2
+    sed -n '/<div class="fase n'"$fase_ini"' col-md-12 ">/,/<div class="fase n'"$fase_fin"' col-md-12 ">/p' /tmp/fixture.tmp | sed '/<script/,/<\/script>/d' |  sed 's/\t//g' | tr "&" " " > /tmp/fixture.tmp2
     sed 's/<\/img>//g' /tmp/fixture.tmp2 | sed 's/<img src//g' | sed 's/ nbsp;/-/g' | sed 's/ e_[0-9]*//g' | sed '/<div class="footerCtn">/d' | sed '/<div class="fase n'"$fase_fin"'/d' > /tmp/fixture.html
     if [ $2 -eq 5 ]
     then
-        sed '1c<div><div><div><div><div><div>\n' /tmp/fixture.html > /tmp/fixture.html2
+        sed '1c<div><div><div><div><div>' /tmp/fixture.html > /tmp/fixture.html2
+        sed -i '2d ' /tmp/fixture.html2
     else
-        sed '1c<div><div><div>\n' /tmp/fixture.html > /tmp/fixture.html2
+        sed '1c<div><div><div>' /tmp/fixture.html > /tmp/fixture.html2
     fi
     mv /tmp/fixture.html2 /tmp/fixture.html
     parseador="xpath -q -e '%s' /tmp/fixture.html | tr "'" " "_"'
@@ -83,7 +84,7 @@ function resultados_grupo {
     local=($( sh -c "`printf "$parseador" '//div[@class="col-lg-6 col-md-12 fecha"][@data-grupo="'$num_grupo'"]//div[@class="col-md-5 col-sm-5 col-xs-10 local"]//div[@class="equipo col-xs-4"]/text()'`" ))
     gol_local=($( sh -c "`printf "$parseador" '//div[@class="col-lg-6 col-md-12 fecha"][@data-grupo="'$num_grupo'"]//div[@class="col-md-5 col-sm-5 col-xs-10 local"]//div[@class="resultado col-xs-3"]/text()'`"))
     gol_visita=($( sh -c "`printf "$parseador" '//div[@class="col-lg-6 col-md-12 fecha"][@data-grupo="'$num_grupo'"]//div[@class="col-md-5  col-sm-5 col-xs-10 visitante"]//div[@class="resultado col-xs-3"]/text()'`" ))
-    visita=($( sh -c "`printf "$parseador" '//div[@class="col-lg-6 col-md-12 fecha"][@data-grupo="'$num_grupo'"]//div[@class="row match-inner"]//div[2]//div[@class="equipo col-xs-4"]/text()'`" ))
+    visita=($( sh -c "`printf "$parseador" '//div[@class="col-lg-6 col-md-12 fecha"][@data-grupo="'$num_grupo'"]//div[@class="col-md-5  col-sm-5 col-xs-10 visitante"]//div[@class="equipo col-xs-4"]/text()'`" ))
     dias=($( sh -c "`printf "$parseador" '//div[@class="col-lg-6 col-md-12 fecha"][@data-grupo="'$num_grupo'"]//div[@class="dia col-md-3 col-sm-3 col-xs-4 mc-date"]//text()'`"))
     horas=($( sh -c "`printf "$parseador" '//div[@class="col-lg-6 col-md-12 fecha"][@data-grupo="'$num_grupo'"]//div[@class="hora col-md-3 col-sm-3 col-xs-4 mc-time"]//text()'`"))
     header="|  %-25s | %-2s | %-2s | %-3s| %-25s | %-12s | %-10s |\n"
